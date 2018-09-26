@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditorActivity">
+
+    <ImageView
+        android:id="@+id/imagePreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/cancel_button_editor"
+        android:layout_marginEnd="89dp"
+        android:onClick="editVisibility"
+        android:src="@drawable/edit_icon" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/shuffleButton"
+        android:layout_marginEnd="38dp"
+        android:onClick="saveBitmap"
+        android:text="save" />
+
+
+    <ImageView
+        android:id="@+id/cancel_button_editor"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/selector_button"
+        android:layout_marginStart="30dp"
+        android:onClick="getBackToMainActivity"
+        android:src="@drawable/cancel_button" />
+
+    <ImageView
+        android:layout_width="60sp"
+        android:layout_height="60sp"
+        android:src="@drawable/shuffle_button"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15sp"
+        android:id="@+id/shuffleButton"/>
+
+    <ProgressBar
+        android:layout_width="80sp"
+        android:layout_height="80sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/progressBar"
+        android:visibility="invisible"
+        android:layout_marginTop="218dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/scrollerLayout"
+        android:orientation="vertical"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="36dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="35sp"
+                android:layout_height="35sp"
+                android:src="@drawable/expose_selector"/>
+            <SeekBar
+                android:id="@+id/opacitySlider"
+                android:layout_width="200sp"
+                android:max="100"
+                android:progress="100"
+                android:layout_height="20sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="35sp"
+                android:layout_height="35sp"
+                android:src="@drawable/expose_selector"/>
+            <SeekBar
+                android:id="@+id/brightnessSlider"
+                android:max="100"
+                android:progress="50"
+                android:layout_width="200sp"
+                android:layout_height="20sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="35sp"
+                android:layout_height="35sp"
+                android:src="@drawable/expose_selector"/>
+            <SeekBar
+                android:id="@+id/contrastSlider"
+                android:max="100"
+                android:progress="50"
+                android:layout_width="200sp"
+                android:layout_height="20sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/selector_button"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="18dp"
+        android:onClick="selectorButton"
+        android:src="@drawable/neon_selector" />
+
+</RelativeLayout>

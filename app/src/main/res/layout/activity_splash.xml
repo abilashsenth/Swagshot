@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashActivity"
+    >
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/opening_gif_mickey" />
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/black_shader_bg"
+        android:scaleType="centerCrop"
+        android:alpha="0.0"/>
+
+
+    <ImageView
+        android:layout_width="150sp"
+        android:layout_height="100sp"
+        android:src="@drawable/swagshot_logo_three"
+        android:elevation="1dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/logo_main"
+        android:layout_margin="30sp"/>
+
+
+</RelativeLayout>
