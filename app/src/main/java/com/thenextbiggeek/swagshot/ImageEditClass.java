@@ -3,6 +3,8 @@ package com.thenextbiggeek.swagshot;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 public class ImageEditClass {
@@ -10,6 +12,27 @@ public class ImageEditClass {
     public ImageEditClass(){
 
     }
+
+
+    //method from stackoverflow. simple AF for brightness and contrast, although values needed to be experimented
+    public static Bitmap adjustBrightnessAndContrast(Bitmap mBitmap, float contrast, float brightness) {
+        ColorMatrix cm = new ColorMatrix(new float[]
+                {
+                        contrast, 0, 0, 0, brightness,
+                        0, contrast, 0, 0, brightness,
+                        0, 0, contrast, 0, brightness,
+                        0, 0, 0, 1, 0
+                });
+        Bitmap mEnhancedBitmap = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), mBitmap
+                .getConfig());
+        Canvas canvas = new Canvas(mEnhancedBitmap);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(mBitmap, 0, 0, paint);
+        return mEnhancedBitmap;
+    }
+
+
     public Bitmap adjustBrightness(Bitmap src, int brightnessValue){
         Bitmap dest = Bitmap.createBitmap(
                 src.getWidth(), src.getHeight(), src.getConfig());
@@ -104,13 +127,13 @@ public class ImageEditClass {
         return bmOut;
     }
 
-    public Bitmap adjustOpacity(Bitmap src, int val){
+    public Bitmap adjustOpacity(Bitmap src, double val){
         Bitmap newBitmap = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
         // create a canvas where we can draw on
         Canvas canvas = new Canvas(newBitmap);
         // create a paint instance with alpha
         Paint alphaPaint = new Paint();
-        alphaPaint.setAlpha(42);
+        alphaPaint.setAlpha((int) val);
         // now lets draw using alphaPaint instance
         canvas.drawBitmap(src, 0, 0, alphaPaint);
         return newBitmap;

@@ -12,10 +12,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,7 +46,11 @@ public class EditorActivity extends AppCompatActivity {
 
     String[] resNameNeon = new String[8];
     String[] resNameDB = new String[35];
-    int widthArray[], heightArray[], opacityValue=100, brightnessValue=50, contrastValue=50;
+    int widthArray[];
+    int heightArray[];
+    int opacityValue=250;
+    float brightnessValue=0;
+    float contrastValue=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,9 +99,12 @@ public class EditorActivity extends AppCompatActivity {
     ImageEditor mImageEditor;
     private void setupSeekbarListeners() {
         opacitySeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                opacityValue = progress;
+                Log.i("OPACITY SCALE", String.valueOf(opacityValue));
+
             }
 
             @Override
@@ -111,10 +116,18 @@ public class EditorActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //refresh
                 //double exposure
-                int resId = context.getResources().getIdentifier(resNameDB[random], "drawable", context.getPackageName() );
+                int resId = 0;
+                if(editType == 1){
+                    resId = context.getResources().getIdentifier(resNameNeon[random], "drawable", context.getPackageName() );
+
+                }else if(editType ==0){
+                     resId = context.getResources().getIdentifier(resNameDB[random], "drawable", context.getPackageName() );
+
+                }
                 combineBitmap = BitmapFactory.decodeResource(getResources(),resId);//the filter
                 copyBitmap = scaleDown(finalBitmap, combineBitmap.getDensity(), combineBitmap, true);//the image
-                mImageEditor = new ImageEditor(combineBitmap, copyBitmap, 3, opacityValue , context );
+                //p arg value is used in that class only for brightness and contrast
+                mImageEditor = new ImageEditor(combineBitmap, copyBitmap, 3, opacityValue , 0,  context );
                 mImageEditor.execute();
 
 
@@ -123,7 +136,9 @@ public class EditorActivity extends AppCompatActivity {
         brightnessSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                brightnessValue = progress;
+                brightnessValue = (float) progress/10;
+                Log.i("BRIGHTNESS SCALE", String.valueOf(brightnessValue));
+
 
             }
 
@@ -134,17 +149,25 @@ public class EditorActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int resId = context.getResources().getIdentifier(resNameDB[random], "drawable", context.getPackageName() );
-                combineBitmap = BitmapFactory.decodeResource(getResources(),resId);//the filter
+                int resId=0;
+                if(editType == 1){
+                    resId = context.getResources().getIdentifier(resNameNeon[random], "drawable", context.getPackageName() );
+
+                }else if(editType ==0){
+                    resId = context.getResources().getIdentifier(resNameDB[random], "drawable", context.getPackageName() );
+
+                }                combineBitmap = BitmapFactory.decodeResource(getResources(),resId);//the filter
                 copyBitmap = scaleDown(finalBitmap, combineBitmap.getDensity(), combineBitmap, true);//the image
-                mImageEditor = new ImageEditor(copyBitmap, combineBitmap, 1, brightnessValue , context );
+                mImageEditor = new ImageEditor(copyBitmap, combineBitmap, 1, brightnessValue , contrastValue,  context );
                 mImageEditor.execute();
             }
         });
         contrastSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                contrastValue = progress;
+                contrastValue = (float) progress/10;
+                Log.i("CONTRAST SCALE", String.valueOf(contrastValue));
+
             }
 
             @Override
@@ -154,10 +177,16 @@ public class EditorActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int resId = context.getResources().getIdentifier(resNameDB[random], "drawable", context.getPackageName() );
-                combineBitmap = BitmapFactory.decodeResource(getResources(),resId);//the filter
+                int resId=0;
+                if(editType == 1){
+                    resId = context.getResources().getIdentifier(resNameNeon[random], "drawable", context.getPackageName() );
+
+                }else if(editType ==0){
+                    resId = context.getResources().getIdentifier(resNameDB[random], "drawable", context.getPackageName() );
+
+                }                  combineBitmap = BitmapFactory.decodeResource(getResources(),resId);//the filter
                 copyBitmap = scaleDown(finalBitmap, combineBitmap.getDensity(), combineBitmap, true);//the image
-                mImageEditor = new ImageEditor(copyBitmap, combineBitmap, 2, contrastValue , context );
+                mImageEditor = new ImageEditor(copyBitmap, combineBitmap, 2, contrastValue , brightnessValue, context );
                 mImageEditor.execute();
             }
         });
@@ -203,36 +232,6 @@ public class EditorActivity extends AppCompatActivity {
 
     }
 
-    ImageEditClass mImageEditClass;
-
-    public void assign(int index){
-        if(editType ==0){
-            mImageEditClass = new ImageEditClass();
-
-
-
-            //blend in another thread
-            BlendAsync mBlendAsync = new BlendAsync(copyBitmap, combineBitmap, context);
-            mBlendAsync.execute();
-
-
-
-
-
-        }else{
-            //neon
-            int resId = context.getResources().getIdentifier(resNameNeon[index], "drawable", context.getPackageName() );
-            combineBitmap = BitmapFactory.decodeResource(getResources(),resId);
-            copyBitmap = scaleDown(finalBitmap, combineBitmap.getDensity(), combineBitmap, true);
-
-
-            //blend in another thread
-            BlendAsync mBlendAsync = new BlendAsync(copyBitmap, combineBitmap, context);
-            mBlendAsync.execute();
-
-
-        }
-    }
 
     private int getARandomInt(int i, int i1) {
         int random = ThreadLocalRandom.current().nextInt(i, i1+1);
@@ -241,12 +240,6 @@ public class EditorActivity extends AppCompatActivity {
 
 
     //bitmap dividing and screening, separate methods, usage differs. MEMORY INTENSIVE
-    public Bitmap bitmapScreenBlend(Bitmap baseParam, Bitmap blendParam){
-
-        return null;
-
-    }
-
     public Bitmap bitmapDivideBlend(Bitmap baseParam, Bitmap blendParam){
 
         Resources res = getResources();
@@ -398,13 +391,16 @@ public class EditorActivity extends AppCompatActivity {
         Bitmap baseParam, blendParam, product;
         Context context;
         ImageEditClass imageEditClass;
-        int type, quantity;
-        public ImageEditor(Bitmap b1, Bitmap b2, int typeFlag, int q, Context c){
+        int type;
+        float quantity;
+        float alterateQuantity;
+        public ImageEditor(Bitmap b1, Bitmap b2, int typeFlag, float q, float p, Context c){
             baseParam = b1;
             context = c;
             type = typeFlag;
             quantity = q;
             blendParam = b2;
+            alterateQuantity = p;
             imageEditClass = new ImageEditClass();
         }
         @Override
@@ -413,11 +409,11 @@ public class EditorActivity extends AppCompatActivity {
             switch (type){
                 case 1:
                     //brightness change
-                    product= imageEditClass.adjustBrightness(baseParam,quantity );
+                    product= imageEditClass.adjustBrightnessAndContrast(baseParam,quantity,alterateQuantity );
                     break;
                 case 2:
                     //contrast change
-                    product= imageEditClass.adjustContrast(baseParam,quantity );
+                    product= imageEditClass.adjustBrightnessAndContrast(baseParam,quantity,alterateQuantity );
                 break;
 
                 case 3:
